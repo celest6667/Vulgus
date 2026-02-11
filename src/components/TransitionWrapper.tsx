@@ -1,0 +1,1 @@
+// TransitionWrapper component — placeholder

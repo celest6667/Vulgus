@@ -1,0 +1,1 @@
+// Navigation component — placeholder
