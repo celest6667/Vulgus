@@ -1,65 +1,186 @@
-import Image from "next/image";
+"use client";
+
+import { useRef, useEffect, useState } from "react";
+import { gsap } from "@/lib/gsap";
 
 export default function Home() {
+  const videoFullRef = useRef<HTMLDivElement>(null);
+  const revealRef = useRef<HTMLDivElement>(null);
+  const vulRef = useRef<SVGTextElement>(null);
+  const gusRef = useRef<SVGTextElement>(null);
+  const [loaderDone, setLoaderDone] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
+
+  useEffect(() => {
+    const tl = gsap.timeline({ delay: 5 });
+
+    tl.to(revealRef.current, { opacity: 1, duration: 0.05 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.05 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.08 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.04 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.06 });
+
+    tl.to(revealRef.current, { opacity: 0, duration: 0.35 });
+
+    tl.to(revealRef.current, { opacity: 1, duration: 0.04 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.06 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.05 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.07 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.04 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.08 });
+
+    tl.to(revealRef.current, { opacity: 0, duration: 0.2 });
+
+    tl.to(revealRef.current, { opacity: 1, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.04 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.02 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.04 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.02 });
+
+    tl.to(revealRef.current, { opacity: 0, duration: 0.15 });
+
+    tl.to(revealRef.current, { opacity: 1, duration: 0.03 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.05 });
+    tl.to(revealRef.current, { opacity: 1, duration: 0.02 });
+    tl.to(revealRef.current, { opacity: 0, duration: 0.03 });
+
+    tl.to(revealRef.current, { opacity: 1, duration: 0.05 });
+    tl.to(videoFullRef.current, { opacity: 0, duration: 0.05 }, "<");
+
+    tl.call(() => setLoaderDone(true));
+  }, []);
+
+  // Détecte le scroll après le loader
+  useEffect(() => {
+    if (!loaderDone) return;
+  
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 0 && !shrunk) {
+        setShrunk(true);
+  
+        gsap.to(vulRef.current, {
+          x: -800,
+          duration: 1,
+          ease: "power3.inOut",
+        });
+  
+        gsap.to(gusRef.current, {
+          x: 800,
+          duration: 1,
+          ease: "power3.inOut",
+        });
+  
+        gsap.to(".bg-video", {
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.inOut",
+        });
+      }
+  
+      if (e.deltaY < 0 && shrunk) {
+        setShrunk(false);
+  
+        gsap.to(vulRef.current, {
+          x: 0,
+          duration: 1,
+          ease: "power3.inOut",
+        });
+  
+        gsap.to(gusRef.current, {
+          x: 0,
+          duration: 1,
+          ease: "power3.inOut",
+        });
+  
+        gsap.to(".bg-video", {
+          opacity: 1,
+          duration: 0.8,
+          ease: "power2.inOut",
+        });
+      }
+    };
+  
+    window.addEventListener("wheel", handleWheel);
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [loaderDone, shrunk]);
+  
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="h-screen w-screen overflow-hidden relative bg-white">
+      {/* Vidéo background */}
+      <video
+        autoPlay
+        muted
+        playsInline
+        loop
+        className="bg-video absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/video.mp4" type="video/mp4" />
+      </video>
+
+      {/* Vidéo plein écran initiale */}
+      <div ref={videoFullRef} className="absolute inset-0 z-10">
+        <video
+          autoPlay
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      {/* SVG mask avec VUL et GUS séparés */}
+      <div ref={revealRef} className="absolute inset-0 z-20 opacity-0">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <mask id="title-mask">
+              <rect width="1440" height="900" fill="white" />
+              <text
+                ref={vulRef}
+                x="50%"
+                y="50%"
+                dominantBaseline="central"
+                textAnchor="end"
+                fill="black"
+                fontSize="280"
+                fontWeight="700"
+                fontFamily="Oswald, sans-serif"
+              >
+                VUL
+              </text>
+              <text
+                ref={gusRef}
+                x="50%"
+                y="50%"
+                dominantBaseline="central"
+                textAnchor="start"
+                fill="black"
+                fontSize="280"
+                fontWeight="700"
+                fontFamily="Oswald, sans-serif"
+              >
+                GUS
+              </text>
+            </mask>
+          </defs>
+          <rect
+            width="1440"
+            height="900"
+            fill="white"
+            mask="url(#title-mask)"
+          />
+        </svg>
+      </div>
+    </main>
   );
 }
